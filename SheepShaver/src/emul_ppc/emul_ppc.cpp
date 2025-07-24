@@ -1592,9 +1592,16 @@ uint32 call_macos6(uint32 tvect, uint32 arg1, uint32 arg2, uint32 arg3, uint32 a
 
 uint32 call_macos7(uint32 tvect, uint32 arg1, uint32 arg2, uint32 arg3, uint32 arg4, uint32 arg5, uint32 arg6, uint32 arg7)
 {
-	printf("ERROR: call_macos7() unimplemented\n");
-	QuitEmulator();
-	return 0;
+        printf("ERROR: call_macos7() unimplemented\n");
+        QuitEmulator();
+        return 0;
+}
+
+uint32 call_macos8(uint32 tvect, uint32 a1, uint32 a2, uint32 a3, uint32 a4, uint32 a5, uint32 a6, uint32 a7, uint32 a8)
+{
+        printf("ERROR: call_macos8() unimplemented\n");
+        QuitEmulator();
+        return 0;
 }
 
 

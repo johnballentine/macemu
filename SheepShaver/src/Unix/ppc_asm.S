@@ -706,6 +706,23 @@ C_SYMBOL_NAME(call_macos7):
 	bctrl
 	epilog
 
+        ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME(call_macos8)
+C_SYMBOL_NAME(call_macos8):
+        prolog
+        lwz     r0,0(r3)        // Get routine address
+        lwz     r2,4(r3)        // Load TOC pointer
+        mtctr   r0
+        mr      r3,r4
+        mr      r4,r5
+        mr      r5,r6
+        mr      r6,r7
+        mr      r7,r8
+        mr      r8,r9
+        mr      r9,r10
+        mr      r10,r11
+        bctrl
+        epilog
+
 
 /*
  *  Native resource manager patches

@@ -31,6 +31,12 @@
 #include "serial.h"
 #include "ether.h"
 #include "macos_util.h"
+#include "rootless.h"
+extern "C" void RootlessInstall(void);
+extern "C" void RootlessNewWindow(uint32,uint32,uint32,uint32,uint32,uint32,uint32,uint32);
+extern "C" void RootlessPaintRgn(uint32,uint32,uint32,uint32,uint32,uint32,uint32,uint32);
+extern "C" void RootlessDragGrayRgn(uint32,uint32,uint32,uint32,uint32,uint32,uint32,uint32);
+extern "C" void RootlessQDFlushPortBuffer(uint32,uint32,uint32,uint32,uint32,uint32,uint32,uint32);
 
 // Generate PowerPC thunks for GetResource() replacements?
 #define POWERPC_GET_RESOURCE_THUNKS 1
@@ -94,10 +100,15 @@ uint32 NativeOpcode(int selector)
   	case NATIVE_GET_1_IND_RESOURCE:
   	case NATIVE_R_GET_RESOURCE:
 	case NATIVE_GET_NAMED_RESOURCE:
-	case NATIVE_GET_1_NAMED_RESOURCE:
-  	case NATIVE_MAKE_EXECUTABLE:
-		opcode = POWERPC_NATIVE_OP(1, selector);
-		break;
+        case NATIVE_GET_1_NAMED_RESOURCE:
+        case NATIVE_MAKE_EXECUTABLE:
+        case NATIVE_ROOTLESS_INSTALL:
+        case NATIVE_ROOTLESS_NEWWINDOW:
+        case NATIVE_ROOTLESS_PAINTRGN:
+        case NATIVE_ROOTLESS_DRAGGRAYRGN:
+        case NATIVE_ROOTLESS_QDFLUSHPORTBUFFER:
+                opcode = POWERPC_NATIVE_OP(1, selector);
+                break;
 	default:
 		abort();
 	}
@@ -327,7 +338,12 @@ bool ThunksInit(void)
 	DEFINE_NATIVE_OP(NATIVE_NQD_UNKNOWN_HOOK, NQD_unknown_hook);
 	DEFINE_NATIVE_OP(NATIVE_NQD_BITBLT, NQD_bitblt);
 	DEFINE_NATIVE_OP(NATIVE_NQD_INVRECT, NQD_invrect);
-	DEFINE_NATIVE_OP(NATIVE_NQD_FILLRECT, NQD_fillrect);
+        DEFINE_NATIVE_OP(NATIVE_NQD_FILLRECT, NQD_fillrect);
+        DEFINE_NATIVE_OP(NATIVE_ROOTLESS_INSTALL, RootlessInstall);
+        DEFINE_NATIVE_OP(NATIVE_ROOTLESS_NEWWINDOW, RootlessNewWindow);
+        DEFINE_NATIVE_OP(NATIVE_ROOTLESS_PAINTRGN, RootlessPaintRgn);
+        DEFINE_NATIVE_OP(NATIVE_ROOTLESS_DRAGGRAYRGN, RootlessDragGrayRgn);
+        DEFINE_NATIVE_OP(NATIVE_ROOTLESS_QDFLUSHPORTBUFFER, RootlessQDFlushPortBuffer);
 #undef DEFINE_NATIVE_OP
 #endif
 
