@@ -49,18 +49,18 @@ extern "C" void RootlessInstall(void)
 
     if (tv_NewWindow) {
         WriteMacInt32(tv_NewWindow, NativeFunction(NATIVE_ROOTLESS_NEWWINDOW));
-        WriteMacInt32(tv_NewWindow + 4, (uint32)TOC);
+        WriteMacInt32(tv_NewWindow + 4, (uint32)(uintptr_t)TOC);
     }
     if (tv_PaintRgn) {
         WriteMacInt32(tv_PaintRgn, NativeFunction(NATIVE_ROOTLESS_PAINTRGN));
-        WriteMacInt32(tv_PaintRgn + 4, (uint32)TOC);
+        WriteMacInt32(tv_PaintRgn + 4, (uint32)(uintptr_t)TOC);
     }
     if (tv_DragGrayRgn) {
         WriteMacInt32(tv_DragGrayRgn, NativeFunction(NATIVE_ROOTLESS_DRAGGRAYRGN));
-        WriteMacInt32(tv_DragGrayRgn + 4, (uint32)TOC);
+        WriteMacInt32(tv_DragGrayRgn + 4, (uint32)(uintptr_t)TOC);
     }
     if (tv_QDFlushPortBuffer) {
         WriteMacInt32(tv_QDFlushPortBuffer, NativeFunction(NATIVE_ROOTLESS_QDFLUSHPORTBUFFER));
-        WriteMacInt32(tv_QDFlushPortBuffer + 4, (uint32)TOC);
+        WriteMacInt32(tv_QDFlushPortBuffer + 4, (uint32)(uintptr_t)TOC);
     }
 }
