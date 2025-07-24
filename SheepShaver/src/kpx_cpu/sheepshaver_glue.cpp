@@ -26,6 +26,7 @@
 #include "emul_op.h"
 #include "rom_patches.h"
 #include "macos_util.h"
+#include "rootless.h"
 #include "block-alloc.hpp"
 #include "sigsegv.h"
 #include "cpu/ppc/ppc-cpu.hpp"
@@ -321,12 +322,32 @@ int sheepshaver_cpu::compile1(codegen_context_t & cg_context)
 			dg.gen_invoke(VideoInstallAccel);
 			status = COMPILE_CODE_OK;
 			break;
-		case NATIVE_VIDEO_VBL:
-			dg.gen_invoke(VideoVBL);
-			status = COMPILE_CODE_OK;
-			break;
-		case NATIVE_GET_RESOURCE:
-		case NATIVE_GET_1_RESOURCE:
+                case NATIVE_VIDEO_VBL:
+                        dg.gen_invoke(VideoVBL);
+                        status = COMPILE_CODE_OK;
+                        break;
+                case NATIVE_ROOTLESS_INSTALL:
+                        dg.gen_invoke(RootlessInstall);
+                        status = COMPILE_CODE_OK;
+                        break;
+                case NATIVE_ROOTLESS_NEWWINDOW:
+                        dg.gen_invoke(RootlessNewWindow);
+                        status = COMPILE_CODE_OK;
+                        break;
+                case NATIVE_ROOTLESS_PAINTRGN:
+                        dg.gen_invoke(RootlessPaintRgn);
+                        status = COMPILE_CODE_OK;
+                        break;
+                case NATIVE_ROOTLESS_DRAGGRAYRGN:
+                        dg.gen_invoke(RootlessDragGrayRgn);
+                        status = COMPILE_CODE_OK;
+                        break;
+                case NATIVE_ROOTLESS_QDFLUSHPORTBUFFER:
+                        dg.gen_invoke(RootlessQDFlushPortBuffer);
+                        status = COMPILE_CODE_OK;
+                        break;
+                case NATIVE_GET_RESOURCE:
+                case NATIVE_GET_1_RESOURCE:
 		case NATIVE_GET_IND_RESOURCE:
 		case NATIVE_GET_1_IND_RESOURCE:
 		case NATIVE_R_GET_RESOURCE: {
@@ -1155,12 +1176,27 @@ void sheepshaver_cpu::execute_native_op(uint32 selector)
 	case NATIVE_R_GET_RESOURCE:
 		get_resource(ReadMacInt32(XLM_R_GET_RESOURCE));
 		break;
-	case NATIVE_MAKE_EXECUTABLE:
-		MakeExecutable(0, gpr(4), gpr(5));
-		break;
-	case NATIVE_CHECK_LOAD_INVOC:
-		check_load_invoc(gpr(3), gpr(4), gpr(5));
-		break;
+        case NATIVE_MAKE_EXECUTABLE:
+                MakeExecutable(0, gpr(4), gpr(5));
+                break;
+        case NATIVE_ROOTLESS_INSTALL:
+                RootlessInstall();
+                break;
+        case NATIVE_ROOTLESS_NEWWINDOW:
+                RootlessNewWindow(gpr(3), gpr(4), gpr(5), gpr(6), gpr(7), gpr(8), gpr(9), gpr(10));
+                break;
+        case NATIVE_ROOTLESS_PAINTRGN:
+                RootlessPaintRgn(gpr(3), gpr(4), gpr(5), gpr(6), gpr(7), gpr(8), gpr(9), gpr(10));
+                break;
+        case NATIVE_ROOTLESS_DRAGGRAYRGN:
+                RootlessDragGrayRgn(gpr(3), gpr(4), gpr(5), gpr(6), gpr(7), gpr(8), gpr(9), gpr(10));
+                break;
+        case NATIVE_ROOTLESS_QDFLUSHPORTBUFFER:
+                RootlessQDFlushPortBuffer(gpr(3), gpr(4), gpr(5), gpr(6), gpr(7), gpr(8), gpr(9), gpr(10));
+                break;
+        case NATIVE_CHECK_LOAD_INVOC:
+                check_load_invoc(gpr(3), gpr(4), gpr(5));
+                break;
 	case NATIVE_NAMED_CHECK_LOAD_INVOC:
 		named_check_load_invoc(gpr(3), gpr(4), gpr(5));
 		break;
@@ -1247,6 +1283,12 @@ uint32 call_macos6(uint32 tvect, uint32 arg1, uint32 arg2, uint32 arg3, uint32 a
 
 uint32 call_macos7(uint32 tvect, uint32 arg1, uint32 arg2, uint32 arg3, uint32 arg4, uint32 arg5, uint32 arg6, uint32 arg7)
 {
-	const uint32 args[] = { arg1, arg2, arg3, arg4, arg5, arg6, arg7 };
-	return ppc_cpu->execute_macos_code(tvect, sizeof(args)/sizeof(args[0]), args);
+        const uint32 args[] = { arg1, arg2, arg3, arg4, arg5, arg6, arg7 };
+        return ppc_cpu->execute_macos_code(tvect, sizeof(args)/sizeof(args[0]), args);
+}
+
+uint32 call_macos8(uint32 tvect, uint32 a1, uint32 a2, uint32 a3, uint32 a4, uint32 a5, uint32 a6, uint32 a7, uint32 a8)
+{
+        const uint32 args[] = { a1, a2, a3, a4, a5, a6, a7, a8 };
+        return ppc_cpu->execute_macos_code(tvect, sizeof(args)/sizeof(args[0]), args);
 }

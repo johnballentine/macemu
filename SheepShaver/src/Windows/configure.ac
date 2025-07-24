@@ -271,6 +271,7 @@ if [[ "x$WANT_JIT" = "xyes" ]]; then
   CPPFLAGS="$CPPFLAGS -DUSE_JIT"
 fi
 CPUSRCS="$CPUSRCS ../kpx_cpu/sheepshaver_glue.cpp ../kpx_cpu/ppc-dis.c"
+CPUSRCS="$CPUSRCS ../rootless_ppc.cpp"
 
 dnl Use the dummy prefs file.
 CPUSRCS="$CPUSRCS ../dummy/prefs_dummy.cpp"
