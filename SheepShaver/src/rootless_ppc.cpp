@@ -3,6 +3,7 @@
 #include "thunks.h"
 #include "main.h"
 #include "debug.h"
+#include <cstdint>
 
 static uint32 tv_NewWindow = 0;
 static uint32 tv_PaintRgn = 0;
@@ -49,18 +50,26 @@ extern "C" void RootlessInstall(void)
 
     if (tv_NewWindow) {
         WriteMacInt32(tv_NewWindow, NativeFunction(NATIVE_ROOTLESS_NEWWINDOW));
+#if !EMULATED_PPC
         WriteMacInt32(tv_NewWindow + 4, (uint32)(uintptr_t)TOC);
+#endif
     }
     if (tv_PaintRgn) {
         WriteMacInt32(tv_PaintRgn, NativeFunction(NATIVE_ROOTLESS_PAINTRGN));
+#if !EMULATED_PPC
         WriteMacInt32(tv_PaintRgn + 4, (uint32)(uintptr_t)TOC);
+#endif
     }
     if (tv_DragGrayRgn) {
         WriteMacInt32(tv_DragGrayRgn, NativeFunction(NATIVE_ROOTLESS_DRAGGRAYRGN));
+#if !EMULATED_PPC
         WriteMacInt32(tv_DragGrayRgn + 4, (uint32)(uintptr_t)TOC);
+#endif
     }
     if (tv_QDFlushPortBuffer) {
         WriteMacInt32(tv_QDFlushPortBuffer, NativeFunction(NATIVE_ROOTLESS_QDFLUSHPORTBUFFER));
+#if !EMULATED_PPC
         WriteMacInt32(tv_QDFlushPortBuffer + 4, (uint32)(uintptr_t)TOC);
+#endif
     }
 }
