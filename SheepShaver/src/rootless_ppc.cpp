@@ -2,6 +2,7 @@
 #include "macos_util.h"
 #include "thunks.h"
 #include "main.h"
+#include "debug.h"
 
 static uint32 tv_NewWindow = 0;
 static uint32 tv_PaintRgn = 0;
