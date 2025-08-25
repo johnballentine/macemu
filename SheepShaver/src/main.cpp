@@ -331,6 +331,7 @@ void ExitAll(void)
 
 void PatchAfterStartup(void)
 {
-	ExecuteNative(NATIVE_VIDEO_INSTALL_ACCEL);
-	InstallExtFS();
+        ExecuteNative(NATIVE_VIDEO_INSTALL_ACCEL);
+        ExecuteNative(NATIVE_ROOTLESS_INSTALL);
+        InstallExtFS();
 }
